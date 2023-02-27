@@ -39,7 +39,20 @@ describe('Seu teste', () => {
   //   expect(...)
   // });
 
-  it('Seu sub-teste', () => {
-    expect(false).to.be.eq(true);
+  // it('Seu sub-teste', () => {
+  //   expect(false).to.be.eq(true);
+  // });
+
+  it('Deve testar a rota inicial com sucesso', async () => {
+    // Arrange
+    const content = {
+      ok: true,
+    }
+    // Action
+    const response = await chai.request(app).get('/');
+
+    // Assertion
+    expect(response.status).to.be.equal(200);   
+    expect(response.body).to.be.deep.equal(content);   
   });
 });
