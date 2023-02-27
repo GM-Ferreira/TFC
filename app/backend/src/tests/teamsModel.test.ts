@@ -4,46 +4,32 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 
 import { app } from '../app';
-import Example from '../database/models/ExampleModel';
-
+// import Example from '../database/models/ExampleModel';
+import Team from '../database/models/TeamsModel';
 import { Response } from 'superagent';
 
 chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe('Seu teste', () => {
-  /**
-   * Exemplo do uso de stubs com tipos
-   */
+describe('Testando rota Teams', () => {
+  let chaiHttpResponse: Response;
+  const outputMock: Team[] = [new Team({
+    id: 1,
+    teamName: 'Nome do time',
+  })];
 
-  // let chaiHttpResponse: Response;
+  before(async () => {
+    sinon
+      .stub(Team, "findAll")
+      .resolves(outputMock as Team[]);
+  });
 
-  // before(async () => {
-  //   sinon
-  //     .stub(Example, "findOne")
-  //     .resolves({
-  //       ...<Seu mock>
-  //     } as Example);
-  // });
+  after(()=>{
+    (Team.findAll as sinon.SinonStub).restore();
+  })
 
-  // after(()=>{
-  //   (Example.findOne as sinon.SinonStub).restore();
-  // })
-
-  // it('...', async () => {
-  //   chaiHttpResponse = await chai
-  //      .request(app)
-  //      ...
-
-  //   expect(...)
-  // });
-
-  // it('Seu sub-teste', () => {
-  //   expect(false).to.be.eq(true);
-  // });
-
-  it('Deve testar a rota inicial com sucesso', async () => {
+  it('Deve testar a rota inicial / com sucesso', async () => {
     // Arrange
     const content = {
       ok: true,
@@ -54,5 +40,15 @@ describe('Seu teste', () => {
     // Assertion
     expect(response.status).to.be.equal(200);   
     expect(response.body).to.be.deep.equal(content);   
+  });
+
+  it('Deve buscar todos times na rota teams ', async () => {
+    // Arrange no before
+    // Action
+    const response = await chai.request(app).get('/teams');
+
+    // Assertion
+    expect(response.status).to.be.equal(200);   
+    expect(response.body).to.be.deep.equal(outputMock);   
   });
 });
