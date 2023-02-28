@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import IServiceTeam from '../interfaces/IServiceTeam';
 
 export default class TeamController {
@@ -8,8 +8,12 @@ export default class TeamController {
     this._service = service;
   }
 
-  async findAll(req: Request, res: Response) {
-    const result = await this._service.findAll();
-    return res.status(200).json(result);
+  async findAll(_req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await this._service.findAll();
+      return res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
   }
 }

@@ -1,4 +1,5 @@
 import * as express from 'express';
+import { Error } from 'sequelize';
 import teamsRoutes from './api/routes/TeamRoutes';
 
 class App {
@@ -6,11 +7,16 @@ class App {
 
   constructor() {
     this.app = express();
-    this.initRoutes();
     this.config();
+
+    this.initRoutes();
 
     // Não remover essa rota
     this.app.get('/', (req, res) => res.json({ ok: true }));
+  }
+
+  private initRoutes(): void {
+    this.app.use('/teams', teamsRoutes);
   }
 
   private config():void {
@@ -23,10 +29,12 @@ class App {
 
     this.app.use(express.json());
     this.app.use(accessControl);
-  }
-
-  private initRoutes(): void {
-    this.app.use('/teams', teamsRoutes);
+    this.app.use((
+      err: Error,
+      _req: express.Request,
+      res: express.Response,
+      _next: express.NextFunction,
+    ) => { res.status(500).json(err.message); });
   }
 
   public start(PORT: string | number):void {
