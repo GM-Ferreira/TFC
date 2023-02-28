@@ -7,4 +7,11 @@ export default class TeamService {
   async findAll(): Promise<Team[]> {
     return this.model.findAll();
   }
+
+  async findOne(id:number): Promise<Team> {
+    const result = await this.model.findOne({ where: { id } });
+
+    if (!result) throw new Error('NOT_FOUND');
+    return result;
+  }
 }

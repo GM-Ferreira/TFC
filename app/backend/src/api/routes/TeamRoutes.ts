@@ -12,4 +12,10 @@ teamsRoutes.get('/', (
   next:NextFunction,
 ) => teamsController.findAll(req, res, next));
 
+teamsRoutes.get('/:id', (
+  req: Request,
+  res:Response,
+  next:NextFunction,
+) => teamsController.findOne(req, res, next));
+
 export default teamsRoutes;

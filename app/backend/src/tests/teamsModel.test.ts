@@ -7,26 +7,25 @@ import { app } from '../app';
 // import Example from '../database/models/ExampleModel';
 import Team from '../database/models/TeamsModel';
 import { Response } from 'superagent';
+import TeamService from '../api/services/TeamService';
 
 chai.use(chaiHttp);
 
 const { expect } = chai;
 
 describe('Testando rota Teams', () => {
-  let chaiHttpResponse: Response;
-  const outputMock: Team[] = [new Team({
+    const outputMock: Team[] = [new Team({
     id: 1,
     teamName: 'Nome do time',
   })];
 
-  before(async () => {
-    sinon
-      .stub(Team, "findAll")
-      .resolves(outputMock as Team[]);
+  const idMock: Team = new Team({
+    id: 1,
+    teamName: 'Nome do time',
   });
 
-  after(()=>{
-    (Team.findAll as sinon.SinonStub).restore();
+  afterEach(()=>{
+    sinon.restore();
   })
 
   it('Deve testar a rota inicial / com sucesso', async () => {
@@ -43,12 +42,31 @@ describe('Testando rota Teams', () => {
   });
 
   it('Deve buscar todos times na rota teams ', async () => {
-    // Arrange no before
+    // Arrange
+    sinon
+      .stub(Team, "findAll")
+      .resolves(outputMock as Team[]);
+
     // Action
-    const response = await chai.request(app).get('/teams');
+    const service = new TeamService();
+    const response = await service.findAll();
 
     // Assertion
-    expect(response.status).to.be.equal(200);   
-    expect(response.body).to.be.deep.equal(outputMock);   
+    expect(response).to.be.deep.equal(outputMock);   
+    expect(response.length).to.be.equal(1);   
+  });
+
+  it('Deve buscar um time pelo id ', async () => {
+    // Arrange
+    sinon
+      .stub(Team, "findOne")
+      .resolves(idMock);
+
+    // Action
+    const service = new TeamService();
+    const response = await service.findOne(1);
+
+    // Assertion
+    expect(response).to.be.equal(idMock);
   });
 });

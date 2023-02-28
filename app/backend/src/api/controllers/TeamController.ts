@@ -16,4 +16,14 @@ export default class TeamController {
       next(error);
     }
   }
+
+  async findOne(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const result = await this._service.findOne(Number(id));
+      return res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
