@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { Error } from 'sequelize';
+import ErrorHandler from './api/middlewares/handleError';
 import teamsRoutes from './api/routes/TeamRoutes';
 import userRoutes from './api/routes/UserRoutes';
 
@@ -11,8 +11,7 @@ class App {
     this.config();
 
     this.initRoutes();
-    this.initMiddlewares();
-
+    this.initErrorHandler();
     // Não remover essa rota
     this.app.get('/', (req, res) => res.json({ ok: true }));
   }
@@ -34,13 +33,8 @@ class App {
     this.app.use(accessControl);
   }
 
-  private initMiddlewares() {
-    this.app.use((
-      err: Error,
-      _req: express.Request,
-      res: express.Response,
-      _next: express.NextFunction,
-    ) => { res.status(500).json({ message: err.message }); });
+  private initErrorHandler() {
+    this.app.use(ErrorHandler.handler);
   }
 
   public start(PORT: string | number):void {

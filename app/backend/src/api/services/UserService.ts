@@ -1,6 +1,5 @@
 import { ModelStatic } from 'sequelize';
 import * as jwt from 'jsonwebtoken';
-
 import * as bcrypt from 'bcryptjs';
 
 import UserModel from '../../database/models/UserModel';
@@ -19,11 +18,11 @@ export default class UserService {
     return this.model.findAll();
   }
 
-  async findOne(email: string, password: string): Promise<object> {
+  async findOne(email: string, password: string): Promise<{ token: string }> {
     const user = await this.model.findOne({ where: { email } });
-    const isValid = bcrypt.compareSync(password, user?.password || '');
+    const isValidPassword = bcrypt.compareSync(password, user?.password || '');
 
-    if (!user || !isValid) throw new Error('Invalid user or password');
+    if (!user || !isValidPassword) throw new Error('Invalid email or password');
 
     const token = await UserService.generateToken({ content: email });
     return { token };
