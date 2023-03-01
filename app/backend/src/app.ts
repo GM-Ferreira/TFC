@@ -1,6 +1,7 @@
 import * as express from 'express';
 import { Error } from 'sequelize';
 import teamsRoutes from './api/routes/TeamRoutes';
+import userRoutes from './api/routes/UserRoutes';
 
 class App {
   public app: express.Express;
@@ -10,6 +11,7 @@ class App {
     this.config();
 
     this.initRoutes();
+    this.initMiddlewares();
 
     // Não remover essa rota
     this.app.get('/', (req, res) => res.json({ ok: true }));
@@ -17,6 +19,7 @@ class App {
 
   private initRoutes(): void {
     this.app.use('/teams', teamsRoutes);
+    this.app.use('/login', userRoutes);
   }
 
   private config():void {
@@ -29,12 +32,15 @@ class App {
 
     this.app.use(express.json());
     this.app.use(accessControl);
+  }
+
+  private initMiddlewares() {
     this.app.use((
       err: Error,
       _req: express.Request,
       res: express.Response,
       _next: express.NextFunction,
-    ) => { res.status(500).json(err.message); });
+    ) => { res.status(500).json({ message: err.message }); });
   }
 
   public start(PORT: string | number):void {
