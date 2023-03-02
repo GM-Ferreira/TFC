@@ -1,5 +1,6 @@
 import * as express from 'express';
 import ErrorHandler from './api/middlewares/handleError';
+import matchRoutes from './api/routes/MatchRoutes';
 import teamsRoutes from './api/routes/TeamRoutes';
 import userRoutes from './api/routes/UserRoutes';
 
@@ -19,6 +20,7 @@ class App {
   private initRoutes(): void {
     this.app.use('/teams', teamsRoutes);
     this.app.use('/login', userRoutes);
+    this.app.use('/matches', matchRoutes);
   }
 
   private config():void {
