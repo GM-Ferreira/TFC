@@ -26,4 +26,14 @@ export default class UserController {
       next(error);
     }
   }
+
+  async findByToken(req: Request, res: Response, next: NextFunction) {
+    try {
+      const token = req.headers.authorization as string;
+      const result = await this._service.findByToken(token);
+      return res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
