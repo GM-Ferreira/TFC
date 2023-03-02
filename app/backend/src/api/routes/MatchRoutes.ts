@@ -10,6 +10,12 @@ matchRoutes.get('/', (
   req: Request,
   res:Response,
   next:NextFunction,
-) => matchController.findAll(req, res, next));
+) => matchController.findByProgress(req, res, next));
+
+// matchRoutes.get('/', (
+//   req: Request,
+//   res:Response,
+//   next:NextFunction,
+// ) => matchController.findAll(req, res, next));
 
 export default matchRoutes;

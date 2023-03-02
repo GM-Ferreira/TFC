@@ -13,4 +13,14 @@ export default class MatchService {
       ],
     });
   }
+
+  async findByProgress(inProgress: boolean): Promise<Match[]> {
+    return this.model.findAll({
+      where: { inProgress },
+      include: [
+        { model: Team, as: 'homeTeam', attributes: ['teamName'] },
+        { model: Team, as: 'awayTeam', attributes: ['teamName'] },
+      ],
+    });
+  }
 }
