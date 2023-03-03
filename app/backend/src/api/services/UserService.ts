@@ -10,7 +10,7 @@ export default class UserService {
 
   static async generateToken(payload: IPayload) {
     const secret = process.env.JWT_SECRET || 'jwt_secret';
-    const token = jwt.sign(payload, secret, { expiresIn: '1d' });
+    const token = jwt.sign(payload, secret);
     return token;
   }
 

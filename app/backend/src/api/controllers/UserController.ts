@@ -17,20 +17,20 @@ export default class UserController {
     }
   }
 
-  async findOne(req: Request, res: Response, next: NextFunction) {
+  async findByToken(req: Request, res: Response, next: NextFunction) {
     try {
-      const { email, password } = req.body;
-      const result = await this._service.findOne(email, password);
+      const token = req.headers.authorization as string;
+      const result = await this._service.findByToken(token);
       return res.status(200).json(result);
     } catch (error) {
       next(error);
     }
   }
 
-  async findByToken(req: Request, res: Response, next: NextFunction) {
+  async findOne(req: Request, res: Response, next: NextFunction) {
     try {
-      const token = req.headers.authorization as string;
-      const result = await this._service.findByToken(token);
+      const { email, password } = req.body;
+      const result = await this._service.findOne(email, password);
       return res.status(200).json(result);
     } catch (error) {
       next(error);

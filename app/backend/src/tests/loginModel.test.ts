@@ -5,9 +5,10 @@ import chaiHttp = require('chai-http');
 import * as bcrypt from 'bcryptjs';
 import { app } from '../app';
 
-
 import User from '../database/models/UserModel'
 import UserService from '../api/services/UserService';
+import { exec } from 'child_process';
+// import  IUser from '../api/interfaces/IUser'
 
 chai.use(chaiHttp);
 
@@ -49,7 +50,7 @@ describe('Testando rota Login', () => {
     sinon.restore();
   })
 
-  it('É possível listar todos usuários', async () => {
+  it('É possível listar todos usuários - service', async () => {
     // Arrange
     sinon.stub(User, "findAll").resolves([outputUser]);
 
@@ -61,17 +62,98 @@ describe('Testando rota Login', () => {
     expect(response[0]).to.be.deep.equal(outputUser);
   });
 
-  it('Deve ser possível fazer login', async () => {
+  it('É possível listar todos usuários - http req', async () => {
+     // Arrange
+     sinon.stub(User, "findAll").resolves([outputUser]);
+ 
+     // Action
+     const response = await chai.request(app).get('/login');
+ 
+     // Assertion
+     expect(response.status).to.be.equal(200);
+  });
+
+  it('Retorna um erro se não encontrar usuarios - http req', async () => {
     // Arrange
-    sinon.stub(User, "findOne").resolves(outputUser);
-    sinon.stub(bcrypt, 'compareSync').resolves(true)
+    const error = new Error("user not found");
+    sinon.stub(User, "findAll").throws(error);
 
     // Action
-    const service = new UserService();
-    const response = await service.findOne(inputLogin.email, inputLogin.password);
+    const response = await chai.request(app).get('/login');
 
     // Assertion
-    expect(response).have.property('token').and.to.be.a('string');
+    expect(response.status).to.be.equal(500);
+  });
+
+  it('É possível buscar usuário pelo token - http req', async () => {
+  // Arrange
+  sinon.stub(User, "findOne").resolves(outputUser);
+
+  // Action
+  const response = await chai.request(app)
+  .get('/login/role')
+  .set('authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZW50IjoiYWRtaW5AYWRtaW4uY29tIiwiaWF0IjoxNjc3ODQ3OTc1fQ.1OGw-6ihzGxfLR1PXCz8Jggp403YzwJH-sWNXveC39c');
+  
+  //Assertion
+  expect(response).to.have.status(200);
+  expect(response.body).to.be.deep.equal({role: 'admin'});
+
+  });
+
+  it('Retorna um erro ao buscar usuário com token invalido - http req', async () => {
+    // Arrange
+    const invalidToken = 'eyJh'
+
+    // Action
+    const response = await chai.request(app)
+    .get('/login/role')
+    .set('authorization', invalidToken);
+
+    //Assertion
+    expect(response).to.have.status(401);
+  });
+
+  it('Retorna um erro ao buscar usuário sem token - http req', async () => {
+    // Arrange
+    const invalidToken = 'eyJh'
+
+    // Action
+    const response = await chai.request(app)
+    .get('/login/role')
+    .set('wrongName', invalidToken);
+
+    //Assertion
+    expect(response).to.have.status(401);
+  });
+
+  it('Erro token valido porém usuário não existe no middleware - http req', async () => {
+    // Arrange
+    sinon.stub(User, "findOne").resolves(null);
+  
+    // Action
+    const response = await chai.request(app)
+    .get('/login/role')
+    .set('authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZW50IjoiYWRtaW5AYWRtaW4uY29tIiwiaWF0IjoxNjc3ODQ3OTc1fQ.1OGw-6ihzGxfLR1PXCz8Jggp403YzwJH-sWNXveC39c');
+    
+    //Assertion
+    expect(response).to.have.status(400);
+  });
+  
+  it('Erro token valido porém usuário não existe no service - http req', async () => {
+    // Arrange
+    sinon.stub(User, "findOne")
+      .onCall(0).resolves(outputUser)
+      .onCall(1).resolves(null);
+
+    // Action
+    const response = await chai.request(app)
+    .get('/login/role')
+    .set('authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZW50IjoiYWRtaW5AYWRtaW4uY29tIiwiaWF0IjoxNjc3ODQ3OTc1fQ.1OGw-6ihzGxfLR1PXCz8Jggp403YzwJH-sWNXveC39c');
+    
+    //Assertion
+    expect(response).to.have.status(401);
+    expect(response.body).to.be.deep.equal({message: 'Invalid email or password'});
+
   });
 
   it('Não deve ser possível fazer login com dados inválidos', async () => {
@@ -113,18 +195,30 @@ describe('Testando rota Login', () => {
     expect(response.body).to.deep.equal(outErrorFields)
   });
 
-  // it('Não deve ser possível fazer login com dados inválidos', async () => {
+  it('É possível fazer login com dados válidos - http req', async () => {
     // Arrange
-    // sinon.stub(User, "findOne").resolves(outputUser);
-    // sinon.stub(bcrypt, 'compareSync').resolves(null)
-
+    sinon.stub(User, "findOne").resolves(outputUser);
+  
     // Action
-    // const service = new UserService();
-    // const response = await service.findOne(inputWrongLogin.email, inputWrongLogin.password);
+    const response = await chai.request(app)
+    .post('/login')
+    .send({ email: "admin@admin.com", password: "secret_admin" })
+    
+    //Assertion
+    expect(response).to.have.status(200); 
+  });
 
-    // Assertion
-    // expect(service.findOne).to.throw('Invalid user or password');
-    // expect(response).to.throw('Invalid user or password');
-
-  // });
+  it('Erro de usuário não existente na service - http req', async () => {
+    // Arrange
+    sinon.stub(User, "findOne").resolves(null);
+  
+    // Action
+    const response = await chai.request(app)
+    .post('/login')
+    .send({ email: "admin@admin.com", password: "secret_admin" })
+    
+    //Assertion
+    expect(response).to.have.status(401); 
+    expect(response.body).to.deep.equal(outErrorMsg)
+  });
 });

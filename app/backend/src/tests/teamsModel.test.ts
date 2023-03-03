@@ -6,7 +6,6 @@ import chaiHttp = require('chai-http');
 import { app } from '../app';
 // import Example from '../database/models/ExampleModel';
 import Team from '../database/models/TeamsModel';
-import { Response } from 'superagent';
 import TeamService from '../api/services/TeamService';
 
 chai.use(chaiHttp);
