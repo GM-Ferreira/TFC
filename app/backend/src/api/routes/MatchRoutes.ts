@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import MatchController from '../controllers/MatchController';
+import AreTeamsValids from '../middlewares/AreTeamsValids';
 import isValidToken from '../middlewares/isValidToken';
 import MatchService from '../services/MatchService';
 
@@ -25,7 +26,7 @@ matchRoutes.patch('/:id', isValidToken.test, (
   next: NextFunction,
 ) => matchController.updateGoals(req, res, next));
 
-matchRoutes.post('/', isValidToken.test, (
+matchRoutes.post('/', isValidToken.test, AreTeamsValids.test, (
   req: Request,
   res:Response,
   next:NextFunction,
