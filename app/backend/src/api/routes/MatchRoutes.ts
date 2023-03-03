@@ -25,4 +25,10 @@ matchRoutes.patch('/:id', isValidToken.test, (
   next: NextFunction,
 ) => matchController.updateGoals(req, res, next));
 
+matchRoutes.post('/', isValidToken.test, (
+  req: Request,
+  res:Response,
+  next:NextFunction,
+) => matchController.creatMatch(req, res, next));
+
 export default matchRoutes;

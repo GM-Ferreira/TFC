@@ -2,8 +2,10 @@ import { ModelStatic } from 'sequelize';
 import Team from '../../database/models/TeamsModel';
 import Match from '../../database/models/MatchModel';
 import IServiceMatch from '../interfaces/IServiceMatch';
+import IMatch from '../interfaces/IMatch';
 
 export default class MatchService implements IServiceMatch {
+  model: ModelStatic<Match> = Match;
   async findAll(): Promise<Match[]> {
     return this.model.findAll({
       include: [
@@ -47,20 +49,21 @@ export default class MatchService implements IServiceMatch {
     // se false devolve uma mensagem de erro
     if (match.inProgress === false) throw new Error('Match already finished');
 
-    // se true então substitui valores e da um save/update
+    // se true então substitui valores
     match.awayTeamGoals = awayTeamGoals;
     match.homeTeamGoals = homeTeamGoals;
     await match.save();
 
     return match;
-    // return this.model.findAll({
-    //   where: { id },
-    //   include: [
-    //     { model: Team, as: 'homeTeam', attributes: ['teamName'] },
-    //     { model: Team, as: 'awayTeam', attributes: ['teamName'] },
-    //   ],
-    // });
   }
 
-  model: ModelStatic<Match> = Match;
+  async creatMatch(data: IMatch): Promise<Match> {
+    const { homeTeamId, homeTeamGoals, awayTeamId, awayTeamGoals } = data;
+
+    const newMatch = await this.model.create({
+      homeTeamId, homeTeamGoals, awayTeamId, awayTeamGoals, inProgress: true,
+    });
+
+    return newMatch;
+  }
 }

@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import IMatch from '../interfaces/IMatch';
 import IServiceMatch from '../interfaces/IServiceMatch';
 
 export default class MatchController {
@@ -43,5 +44,11 @@ export default class MatchController {
     } catch (error) {
       next(error);
     }
+  }
+
+  async creatMatch(req: Request, res: Response, _next: NextFunction) {
+    const bodyData: IMatch = req.body;
+    const newMatch = await this._service.creatMatch(bodyData);
+    return res.status(201).json(newMatch);
   }
 }
