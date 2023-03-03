@@ -32,8 +32,16 @@ export default class MatchController {
 
     if (result.message === 'finished') return res.status(200).json({ message: 'finished' });
     if (result.message !== 'finished') return res.status(401).json({ message: 'match not found' });
-    // adicionar em routes
-    // colocar o tokenvalidation como middleware
-    // adicionar a routes no app
+  }
+
+  async updateGoals(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { homeTeamGoals, awayTeamGoals } = req.body;
+      const { id } = req.params;
+      const result = await this._service.updateGoals(Number(id), homeTeamGoals, awayTeamGoals);
+      return res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
   }
 }
