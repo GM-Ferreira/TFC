@@ -1,5 +1,6 @@
 import * as express from 'express';
 import ErrorHandler from './api/middlewares/handleError';
+import leaderboardRoutes from './api/routes/LeaderboardRoutes';
 import matchRoutes from './api/routes/MatchRoutes';
 import teamsRoutes from './api/routes/TeamRoutes';
 import userRoutes from './api/routes/UserRoutes';
@@ -21,6 +22,7 @@ class App {
     this.app.use('/teams', teamsRoutes);
     this.app.use('/login', userRoutes);
     this.app.use('/matches', matchRoutes);
+    this.app.use('/leaderboard', leaderboardRoutes);
   }
 
   private config():void {
