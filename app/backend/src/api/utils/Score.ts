@@ -30,7 +30,6 @@ class Score {
     if (teamGoals > enemyGoals) {
       this.totalPoints += 3;
       this.totalVictories += 1;
-      this.goalsBalance = (this.goalsFavor - this.goalsOwn);
     } else if (enemyGoals > teamGoals) {
       this.totalLosses += 1;
     } else {
@@ -39,13 +38,13 @@ class Score {
     }
     this.goalsFavor += teamGoals;
     this.goalsOwn += enemyGoals;
+    this.goalsBalance = (this.goalsFavor - this.goalsOwn);
   }
 
   verifyHomeTeam(teamGoals: number, enemyGoals: number) {
     if (teamGoals > enemyGoals) {
       this.totalPoints += 3;
       this.totalVictories += 1;
-      this.goalsBalance = (this.goalsFavor - this.goalsOwn);
     } else if (teamGoals < enemyGoals) {
       this.totalLosses += 1;
     } else {
@@ -54,6 +53,7 @@ class Score {
     }
     this.goalsFavor += teamGoals;
     this.goalsOwn += enemyGoals;
+    this.goalsBalance = (this.goalsFavor - this.goalsOwn);
   }
 
   verifyMatch(teamId: number) {
