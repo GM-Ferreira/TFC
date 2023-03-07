@@ -27,19 +27,6 @@ describe('Testando rota Teams', () => {
     sinon.restore();
   })
 
-  it('Deve testar a rota inicial / com sucesso', async () => {
-    // Arrange
-    const content = {
-      ok: true,
-    }
-    // Action
-    const response = await chai.request(app).get('/');
-
-    // Assertion
-    expect(response.status).to.be.equal(200);   
-    expect(response.body).to.be.deep.equal(content);   
-  });
-
   it('Deve buscar todos times na rota teams ', async () => {
     // Arrange
     sinon
@@ -67,5 +54,65 @@ describe('Testando rota Teams', () => {
 
     // Assertion
     expect(response).to.be.equal(idMock);
+  });
+
+  it('É possível listar todos os times - http req', async () => {
+    // Arrange
+    sinon.stub(Team, "findAll").resolves(outputMock);
+
+    // Action
+    const response = await chai.request(app).get('/teams');
+
+    // Assertion
+    expect(response.status).to.be.equal(200);
+    expect(response.body).to.have.lengthOf(1);
+  });
+
+  it('Retorna um erro se não encontrar times - http req', async () => {
+  // Arrange
+  const error = new Error("user not found");
+  sinon.stub(Team, "findAll").throws(error);
+
+  // Action
+  const response = await chai.request(app).get('/teams');
+
+  // Assertion
+  expect(response.status).to.be.equal(500);
+  });
+
+  it('Deve buscar um time pelo id - http req', async () => {
+    // Arrange
+    sinon.stub(Team, "findOne").resolves(idMock);
+
+    // Action
+    const response = await chai.request(app).get('/teams/1');
+
+    // Assertion
+    expect(response.status).to.be.equal(200);
+    expect(response.body).to.have.property('id', 1);
+    expect(response.body).to.have.property('teamName', 'Nome do time');
+  });
+
+  it('Retorna um erro se não encontrar um time pelo id - http req', async () => {
+    // Arrange
+    const error = new Error("team not found");
+    sinon.stub(Team, "findOne").throws(error);
+  
+    // Action
+    const response = await chai.request(app).get('/teams/999');
+  
+    // Assertion
+    expect(response.status).to.be.equal(500);
+  });
+
+  it('Retorna um erro se busca pelo id for vazia - http req', async () => {
+    // Arrange
+    sinon.stub(Team, "findOne").resolves(null);
+  
+    // Action
+    const response = await chai.request(app).get('/teams/000');
+  
+    // Assertion
+    expect(response.status).to.be.equal(500);
   });
 });

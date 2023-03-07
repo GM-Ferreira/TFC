@@ -74,18 +74,4 @@ describe('Testando rota /matches', () => {
     expect(response).to.be.deep.equal(outputFindAll);   
     expect(response.length).to.be.equal(1);   
   });
-
-  // it('Deve buscar um time pelo id ', async () => {
-  //   // Arrange
-  //   sinon
-  //     .stub(Match, "findOne")
-  //     .resolves(idMock);
-
-  //   // Action
-  //   const service = new TeamService();
-  //   const response = await service.findOne(1);
-
-  //   // Assertion
-  //   expect(response).to.be.equal(idMock);
-  // });
 });
