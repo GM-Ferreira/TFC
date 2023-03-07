@@ -32,7 +32,7 @@ export default class MatchController {
     const result = await this._service.finishMatch(Number(id));
 
     if (result.message === 'finished') return res.status(200).json({ message: 'finished' });
-    if (result.message !== 'finished') return res.status(401).json({ message: 'match not found' });
+    if (result.message !== 'finished') return res.status(401).json({ message: result.message });
   }
 
   async updateGoals(req: Request, res: Response, next: NextFunction) {

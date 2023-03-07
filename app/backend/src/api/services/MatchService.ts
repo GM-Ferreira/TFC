@@ -26,13 +26,13 @@ export default class MatchService implements IServiceMatch {
   }
 
   async finishMatch(postId: number): Promise<{ message: string }> {
-    const update = await this.model.update(
+    const [affectedCount] = await this.model.update(
       { inProgress: 'false' },
       { where: { id: postId } },
     );
 
-    if (update) return { message: 'finished' };
-    return { message: 'match not found' };
+    if (affectedCount !== 0) return { message: 'finished' };
+    return { message: 'match not found or alredy finished' };
   }
 
   async updateGoals(id:number, homeTeamGoals: number, awayTeamGoals: number): Promise<Match> {
