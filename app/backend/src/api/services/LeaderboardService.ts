@@ -27,16 +27,6 @@ export default class LeaderboardService implements IServiceLeaderboard {
         // 1º Total de Vitórias
       } return b.totalPoints - a.totalPoints;
     });
-
-    // // 5º Efficiency.
-    // finalScore.sort((a, b) => {
-    //   if (b.totalPoints === a.totalPoints
-    //     && b.totalVictories === a.totalVictories
-    //     && b.goalsFavor === a.goalsFavor
-    //     && b.goalsBalance === a.goalsBalance) {
-    //     return b.efficiency - a.efficiency;
-    //   } return 0;
-    // });
   }
 
   async leaderboard():Promise<IScore[]> {
