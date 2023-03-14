@@ -6,7 +6,7 @@ O TFC é um site informativo sobre partidas e classificações de futebol!
 
 Para o projeto foi desenvolvida uma API (utilizando o método TDD) integrada a um banco de dados através do docker-compose e utilizando modelagem de dados através do Sequelize. O desenvolvimento respeitou regras de negócio providas no projeto e a API é capaz de ser consumida por um front-end que foi provido pela Trybe.
 
-Para adicionar e alterar uma partida é necessário ter um token gerado atráves do JWT, portanto a pessoa deverá estar logada para fazer as alterações.
+Para adicionar e alterar uma partida é necessário ter um token gerado através do JWT, portanto a pessoa deverá estar logada para fazer as alterações.
 
 <details>
   <summary><strong>:busts_in_silhouette: Na aplicação o usuário é capaz de: </strong></summary><br />
@@ -18,9 +18,9 @@ Para adicionar e alterar uma partida é necessário ter um token gerado atráves
 - Listar as partidas em andamento
 - Listar placar geral
 - Listar placar considerando apenas times mandantes
-- Listar placar considerando apenas times vizitantes
+- Listar placar considerando apenas times visitantes
 - Alterar uma partida em andamento
-- Finalziar uma partida em andamento
+- Finalizar uma partida em andamento
 </details>
 
 <details>
