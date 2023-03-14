@@ -41,28 +41,90 @@ Para adicionar e alterar uma partida é necessário ter um token gerado atráves
 - TypeScript
 - Express.js
 - Docker
-- MySQL;
-- Sequelize ORM;
-- JOI data validator;
-- JSON Web Token (JWT);
+- MySQL
+- Sequelize ORM
+- JOI data validator
+- JSON Web Token (JWT)
 </details>
 
-<details>
-  <summary><strong>:twisted_rightwards_arrows: Funcionamento </strong></summary><br />
+ ##  Funcionamento
   
  <details>
   <summary><strong>:whale: Execução da aplicação </strong></summary><br />
   
   - Para iniciar o projeto basta ter o docker instalado e rodar o comando ```npm run compose:up``` na pasta raiz do repositório.
   - Para finalizar o projeto rode o comando ```npm run compose:down``` na pasta raiz do repositório.
+  - Para visualizar os logs do backend no terminal, rode o comando ```npm run logs backend``` na pasta raiz do repositório.
+  - O backend roda na porta ``` 3001 ``` e o frontend na porta ``` 3000 ```
+  - Caso queira acessar o banco de dados MySQL pelo seu computador, conecte-se a porta ``` 3002 ``` com user ``` root ``` e password ``` 123456 ```
   </details>
 
  <details>
-  <summary><strong>Rotas </strong></summary><br />
+  <summary><strong>:twisted_rightwards_arrows: Rotas </strong></summary><br />
   
-  - GET ...
-  - GET ...
-  - GET ...
-  - GET ...
+  <details>
+    
+  <summary><strong> GET /teams </strong></summary><br />
+- Utilizando o método GET em /teams, o retorno será um status 200 e um json contendo os times cadastrados:
+        
+```json
+[
+  {
+    "id": 1,
+    "teamName": "Avaí/Kindermann"
+  },
+  {
+    "id": 2,
+    "teamName": "Bahia"
+  },
+  {
+    "id": 3,
+    "teamName": "Botafogo"
+  },
+  ...
+]
+```
+
   </details>
-</details>
+  
+  
+  <details>
+  
+  <summary><strong> GET /matches </strong></summary><br />
+  - Utilizando o método GET em /matches, o retorno será um status 200 e um json contendo uma lista de partidas:
+
+```json
+    [
+      {
+        "id": 1,
+        "homeTeamId": 16,
+        "homeTeamGoals": 1,
+        "awayTeamId": 8,
+        "awayTeamGoals": 1,
+        "inProgress": false,
+        "homeTeam": {
+          "teamName": "São Paulo"
+        },
+        "awayTeam": {
+          "teamName": "Grêmio"
+        }
+      },
+      ...
+      {
+        "id": 41,
+        "homeTeamId": 16,
+        "homeTeamGoals": 2,
+        "awayTeamId": 9,
+        "awayTeamGoals": 0,
+        "inProgress": true,
+        "homeTeam": {
+          "teamName": "São Paulo"
+        },
+        "awayTeam": {
+          "teamName": "Internacional"
+        }
+      }
+    ]
+```
+  
+  </details>
