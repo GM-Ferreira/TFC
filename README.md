@@ -53,47 +53,77 @@ Para adicionar e alterar uma partida é necessário ter um token gerado atráves
   <summary><strong>:whale: Execução da aplicação </strong></summary><br />
   
   - Para iniciar o projeto basta ter o docker instalado e rodar o comando ```npm run compose:up``` na pasta raiz do repositório.
-  - Para finalizar o projeto rode o comando ```npm run compose:down``` na pasta raiz do repositório.
-  - Para visualizar os logs do backend no terminal, rode o comando ```npm run logs backend``` na pasta raiz do repositório.
-  - O backend roda na porta ``` 3001 ``` e o frontend na porta ``` 3000 ```
-  - Caso queira acessar o banco de dados MySQL pelo seu computador, conecte-se a porta ``` 3002 ``` com user ``` root ``` e password ``` 123456 ```
+  - Para finalizar o projeto rode o comando `npm run compose:down` na pasta raiz do repositório.
+  - Para visualizar os logs do backend no terminal, rode o comando `npm run logs backend` na pasta raiz do repositório.
+  - O backend roda na porta ` 3001 ` e o frontend na porta ` 3000 `
+  - Caso queira acessar o banco de dados MySQL pelo seu computador, conecte-se a porta ` 3002 ` com user ` root ` e password ` 123456 `
   </details>
 
  <details>
   <summary><strong>:twisted_rightwards_arrows: Rotas </strong></summary><br />
   
   <details>
-    
-  <summary><strong> GET /teams </strong></summary><br />
-- Utilizando o método GET em /teams, o retorno será um status 200 e um json contendo os times cadastrados:
+    <summary><strong> POST /login </strong></summary><br />
+  
+  - Para realizar o login, utilize o método `POST` em `/login`, o body da requisição deve conter o seguinte formato:
+
+    ```json
+    {
+      "email": "string",
+      "password": "string"
+    }
+    ```
+  - O campo `email` deve receber um email válido. Ex: `tfc@projeto.com`;
+  - O campo `password` deve ter mais de 6 caracteres.
+  - Além de válidos, é necessário que o email e a senha estejam cadastrados no banco para ser feito o login;
+  - O retorno será um status `200` e um `json` contendo o token de acesso:
         
-```json
-[
-  {
-    "id": 1,
-    "teamName": "Avaí/Kindermann"
-  },
-  {
-    "id": 2,
-    "teamName": "Bahia"
-  },
-  {
-    "id": 3,
-    "teamName": "Botafogo"
-  },
-  ...
-]
-```
+    ```json
+    {
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZW50IjoiYWRtaW5AYWRtaW4uY29tIiwiaWF0IjoxNjc4Nzk2MTA5fQ.dxoDS5N05_1nmtnrcbHtC0yY75dohq9d5r-mREh8X-E"
+    }
+    ```
+  - Para testar a aplicação utilize os válidos campos abaixo no login:
+
+    ```json
+    {
+      "email": "admin@admin.com",
+      "password": "secret_admin"
+    }
+    ```
+  </details>
+
+  <details>
+  <summary><strong> GET /teams </strong></summary><br />
+
+  - Utilizando o método GET em /teams, o retorno será um status `200` e um `json` contendo os times cadastrados:
+        
+    ```json
+    [
+      {
+        "id": 1,
+        "teamName": "Avaí/Kindermann"
+      },
+      {
+        "id": 2,
+        "teamName": "Bahia"
+      },
+      {
+        "id": 3,
+        "teamName": "Botafogo"
+      },
+      ...
+    ]
+    ```
 
   </details>
   
-  
   <details>
-  
   <summary><strong> GET /matches </strong></summary><br />
-  - Utilizando o método GET em /matches, o retorno será um status 200 e um json contendo uma lista de partidas:
-
-```json
+  
+  - Utilizando o método GET em /matches, o retorno será um status `200` e um `json` contendo uma lista de partidas:
+        
+    ```json
     [
       {
         "id": 1,
@@ -125,6 +155,6 @@ Para adicionar e alterar uma partida é necessário ter um token gerado atráves
         }
       }
     ]
-```
+    ```
   
   </details>
