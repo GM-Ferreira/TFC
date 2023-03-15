@@ -1,4 +1,4 @@
-# Bem vindo ao repositório TFC
+# Bem-vindo ao repositório TFC
 
 ## Descrição do projeto:
 
@@ -96,7 +96,7 @@ Para adicionar e alterar uma partida é necessário ter um token gerado através
   <details>
   <summary><strong> GET /teams </strong></summary><br />
 
-  - Utilizando o método GET em /teams, o retorno será um status `200` e um `json` contendo os times cadastrados:
+  - Utilizando o método GET em `/teams`, o retorno será um status `200` e um `json` contendo os times cadastrados:
         
     ```json
     [
@@ -121,7 +121,7 @@ Para adicionar e alterar uma partida é necessário ter um token gerado através
   <details>
   <summary><strong> GET /matches </strong></summary><br />
   
-  - Utilizando o método GET em /matches, o retorno será um status `200` e um `json` contendo uma lista de partidas:
+  - Utilizando o método GET em `/matches`, o retorno será um status `200` e um `json` contendo uma lista de partidas:
         
     ```json
     [
@@ -157,4 +157,185 @@ Para adicionar e alterar uma partida é necessário ter um token gerado através
     ]
     ```
   
+  </details>
+
+
+  <details>
+  <summary><strong> GET /matches em andamento/finalizadas </strong></summary><br />
+  
+  - Utilizando o método GET em `/matches` com a `query string` *inProgress*, informe o filtro que deverá ser aplicado.
+  - Exemplo: utilizando a rota `/matches?inProgress=true` o retorno será um status `200` e um `json` contendo uma lista de partidas que estão em andamento. Alterando para `/matches?inProgress=false`, o retorno será contido por partidas já finalizadas:
+        
+    ```json
+    [
+      {
+        "id": 1,
+        "homeTeamId": 16,
+        "homeTeamGoals": 1,
+        "awayTeamId": 8,
+        "awayTeamGoals": 1,
+        "inProgress": false,
+        "homeTeam": {
+          "teamName": "São Paulo"
+        },
+        "awayTeam": {
+          "teamName": "Grêmio"
+        }
+      },
+      {
+        "id": 2,
+        "homeTeamId": 9,
+        "homeTeamGoals": 1,
+        "awayTeamId": 14,
+        "awayTeamGoals": 1,
+        "inProgress": false,
+        "homeTeam": {
+          "teamName": "Internacional"
+        },
+        "awayTeam": {
+          "teamName": "Santos"
+        }
+      }
+    ]
+    ```
+  
+  </details>
+
+
+
+
+
+  <details>
+  <summary><strong> GET /leaderboard </strong></summary><br />
+  
+  - Utilizando o método GET em `/leaderboard`, o retorno será um status `200` e um `json` contendo as informações do desempenho de todos os times baseados nas partidas cadastradas:
+        
+    ```json
+    [
+      {
+        "name": "Palmeiras",
+        "totalPoints": 13,
+        "totalGames": 5,
+        "totalVictories": 4,
+        "totalDraws": 1,
+        "totalLosses": 0,
+        "goalsFavor": 17,
+        "goalsOwn": 5,
+        "goalsBalance": 12,
+        "efficiency": 86.67
+      },
+      {
+        "name": "Corinthians",
+        "totalPoints": 12,
+        "totalGames": 5,
+        "totalVictories": 4,
+        "totalDraws": 0,
+        "totalLosses": 1,
+        "goalsFavor": 12,
+        "goalsOwn": 3,
+        "goalsBalance": 9,
+        "efficiency": 80
+      },
+      {
+        "name": "Santos",
+        "totalPoints": 11,
+        "totalGames": 5,
+        "totalVictories": 3,
+        "totalDraws": 2,
+        "totalLosses": 0,
+        "goalsFavor": 12,
+        "goalsOwn": 6,
+        "goalsBalance": 6,
+        "efficiency": 73.33
+      },
+      ...
+    ]
+    ```
+
+  </details>
+
+  <details>
+  <summary><strong> GET /leaderboard/home </strong></summary><br />
+  
+  - Utilizando o método GET em `/leaderboard/home`, o retorno será um status `200` e um `json` contendo as informações do desempenho dos times da casa baseados nas partidas cadastradas:
+        
+    ```json
+    [
+      {
+        "name": "Corinthians",
+        "totalPoints": 6,
+        "totalGames": 2,
+        "totalVictories": 2,
+        "totalDraws": 0,
+        "totalLosses": 0,
+        "goalsFavor": 6,
+        "goalsOwn": 1,
+      },
+      {
+        "name": "Santos",
+        "totalPoints": 9,
+        "totalGames": 3,
+        "totalVictories": 3,
+        "totalDraws": 0,
+        "totalLosses": 0,
+        "goalsFavor": 9,
+        "goalsOwn": 3,
+      },
+      {
+        "name": "Palmeiras",
+        "totalPoints": 7,
+        "totalGames": 3,
+        "totalVictories": 2,
+        "totalDraws": 1,
+        "totalLosses": 0,
+        "goalsFavor": 10,
+        "goalsOwn": 5,
+      },
+      ...
+    ]
+    ```
+
+  </details>
+
+  <details>
+  <summary><strong> GET /leaderboard/away </strong></summary><br />
+  
+  - Utilizando o método GET em `/leaderboard/away`, o retorno será um status `200` e um `json` contendo as informações do desempenho dos times visitantes baseados nas partidas cadastradas:
+        
+    ```json
+    [
+      {
+        "name": "Corinthians",
+        "totalPoints": 6,
+        "totalGames": 3,
+        "totalVictories": 2,
+        "totalDraws": 0,
+        "totalLosses": 1,
+        "goalsFavor": 6,
+        "goalsOwn": 2,
+      },
+      {
+        "name": "Palmeiras",
+        "totalPoints": 6,
+        "totalGames": 2,
+        "totalVictories": 2,
+        "totalDraws": 0,
+        "totalLosses": 0,
+        "goalsFavor": 7,
+        "goalsOwn": 0,
+      },
+      {
+        "name": "Internacional",
+        "totalPoints": 6,
+        "totalGames": 2,
+        "totalVictories": 2,
+        "totalDraws": 0,
+        "totalLosses": 0,
+        "goalsFavor": 3,
+        "goalsOwn": 0,
+      },
+      ...
+    ]
+    ```
+
   </details>
