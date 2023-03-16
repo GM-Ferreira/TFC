@@ -94,6 +94,21 @@ Para adicionar e alterar uma partida é necessário ter um token gerado através
   </details>
 
   <details>
+    <summary><strong> GET /login/role </strong></summary><br />
+  
+  - Para verificar a função/role do usuário que fez login e controlar seus acessos, utilize o método `GET` em `/login/role`.
+  - Será verificado o token no parâmetro ` authorization ` no ` header ` da requisição.
+  - O retorno será um status `200` e um `json` contendo o *role* do usuário:
+        
+    ```json
+      {
+        "role": "admin"
+      }
+    ```
+  </details>
+
+
+  <details>
   <summary><strong> GET /teams </strong></summary><br />
 
   - Utilizando o método GET em `/teams`, o retorno será um status `200` e um `json` contendo os times cadastrados:
@@ -201,9 +216,87 @@ Para adicionar e alterar uma partida é necessário ter um token gerado através
   
   </details>
 
+  <details>
+  <summary><strong> POST /matches </strong></summary><br />
+  
+  - Utilizando o método POST em `/matches` para adicionar uma nova partida, o body da requisição deve conter os campos ` homeTeamId `, ` awayTeamId `, ` homeTeamGoals ` e ` awayTeamGoals `.
+  - Todos os campos devem conter apenas números, os valores de ` homeTeamId ` e ` awayTeamId ` devem ser valores válidos de times existentes no banco de dados, como no exemplo abaixo:
 
+    ```json
+      {
+        "homeTeamId": 1,
+        "awayTeamId": 8,
+        "homeTeamGoals": 2,
+        "awayTeamGoals": 2
+      } 
+    ```
+  - Não é possível inserir uma partida sem um token válido no parâmetro ` authorization ` no ` header ` da requisição;
+  - Caso a partida seja inserida com sucesso, serão retornados os dados da partida e o status ` 201 `:
+        
+    ```json
+      {
+        "id": 1,
+        "homeTeamId": 1,
+        "homeTeamGoals": 2,
+        "awayTeamId": 8,
+        "awayTeamGoals": 2,
+        "inProgress": true,
+      }
+    ```
+  
+  </details>
 
+  <details>
+  <summary><strong> PATCH /matches/:id </strong></summary><br />
+  
+  - Utilizando o método PATCH em `/matches/:id` é possível atualizar os gols de uma partida **em andamento**, o body da requisição deve conter os campos ` homeTeamGoals ` e ` awayTeamGoals `, por parâmetro, deverá ser fornecido o ` id ` da partida que será atualizada.
+  - O ` id ` deve ser um valor válidos de uma partida existente no banco de dados e todos os campos devem conter apenas números, como no exemplo abaixo:
 
+    ```json
+      {
+        "homeTeamGoals": 3,
+        "awayTeamGoals": 4
+      }
+    ```
+  - Não é possível atualizar uma partida sem um token válido no parâmetro ` authorization ` no ` header ` da requisição;
+  - Caso a partida seja atualizada com sucesso, serão retornados os dados da partida e o status ` 200 `:
+        
+    ```json
+      {
+        "id": 41,
+        "homeTeamId": 16,
+        "homeTeamGoals": 3,
+        "awayTeamId": 9,
+        "awayTeamGoals": 4,
+        "inProgress": true,
+        "home_team_id": 16,
+        "away_team_id": 9,
+        "homeTeam": {
+          "teamName": "São Paulo"
+        },
+        "awayTeam": {
+          "teamName": "Internacional"
+        }
+      }
+    ```
+  
+  </details>
+
+  <details>
+  <summary><strong> PATCH /matches/:id/finish </strong></summary><br />
+  
+  - Utilizando o método PATCH em `/matches/:id/finish` é possível finalizar a partida **em andamento** passada pelo parâmetro ` id ` da URL.
+  - O ` id ` deve ser um valor válido de uma partida existente no banco de dados e com status *em andamento*.
+  - Não é possível finalizar uma partida sem um token válido no parâmetro ` authorization ` no ` header ` da requisição;
+  - Caso a partida seja finalizada com sucesso, será retornada uma mensagem "finished" e o status ` 200 `:
+        
+    ```json
+      {
+        "message": "finished"
+      }
+    ```
+  
+  </details>
 
   <details>
   <summary><strong> GET /leaderboard </strong></summary><br />
